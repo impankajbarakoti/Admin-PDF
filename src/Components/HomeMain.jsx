@@ -1,14 +1,14 @@
-import React from 'react'
-import HeroSection from './HeroSection'
-
+import React from "react";
+import HeroSection from "./HeroSection";
+import Navbar from "./Navbar";
 
 const HomeMain = () => {
   return (
     <div>
-          <HeroSection />
-          
+      <Navbar />
+      <HeroSection />
     </div>
-  )
-}
+  );
+};
 
-export default HomeMain
+export default HomeMain;

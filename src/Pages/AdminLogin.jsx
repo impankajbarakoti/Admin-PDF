@@ -54,7 +54,7 @@ const AdminLogin = () => {
           Admin Login 
         </h2>
         <p className="text-gray-500 text-center mb-6">
-          Enter your credentials to access the admin panel
+          Enter your credentials to access the Admin Dashboard
         </p>
 
         {error && (
