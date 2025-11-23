@@ -71,8 +71,8 @@ const Dashboard = () => {
 
   const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, screen: "dashboard" },
-    { label: "Post Blog", icon: FileEdit, screen: "postbooks" },
-    { label: "Published Blogs", icon: BookOpen, screen: "published" },
+    { label: "Post Books", icon: FileEdit, screen: "postbooks" },
+    { label: "Published Books", icon: BookOpen, screen: "published" },
     // { label: "Scheduled Blogs", icon: Calendar, screen: "scheduled" },
     // { label: "Drafted Blogs", icon: FileText, screen: "drafts" },
     // { label: "Inquiries", icon: MessageSquare, screen: "inquiries" },
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
   const stats = [
     {
-      title: "Total Blogs",
+      title: "Total Books",
       count: 35,
       icon: ClipboardList,
       bg: "bg-indigo-100",
@@ -94,7 +94,7 @@ const Dashboard = () => {
     //   iconColor: "text-purple-600",
     // },
     {
-      title: "Published Blogs",
+      title: "Published Books",
       count: 35,
       icon: Zap,
       bg: "bg-orange-100",
@@ -161,7 +161,7 @@ const Dashboard = () => {
     gap-4 sm:gap-6"
               >
                 <ActionButton
-                  title="Publish Blog"
+                  title="Publish Books"
                   subtitle="Instantly create a new post"
                   icon={Plus}
                   bg="bg-indigo-50 border-indigo-200"
@@ -170,7 +170,7 @@ const Dashboard = () => {
                 />
 
                 <ActionButton
-                  title="Schedule Blog"
+                  title="Schedule Books"
                   subtitle="Plan content for later"
                   icon={Calendar}
                   bg="bg-orange-50 border-orange-200"

@@ -181,13 +181,13 @@ const PublishedBlog = ({ blogs = allBlogs }) => {
       {/* Header Section */}
       <header className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">📝 Blogs</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Books</h1>
           <p className="text-sm text-gray-500 mt-1">
             Manage your blog posts and content
           </p>
         </div>
         <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
-          + Add Blog
+          + Add Books
         </button>
       </header>
 
