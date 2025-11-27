@@ -1,60 +1,481 @@
-import React, { useRef, useState, useEffect } from "react";
+// // PostBooks.jsx
+// import React, { useRef, useState } from "react";
+// import axios from "axios";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// import {
+//   Trash2,
+//   Image as ImageIcon,
+//   UploadCloud,
+//   Pencil,
+//   CreditCard,
+//   Settings,
+//   HelpCircle,
+// } from "lucide-react";
+
+// // ------------------- Tab Component -------------------
+// const Tab = ({ label, Icon, isActive, onClick }) => (
+//   <button
+//     onClick={onClick}
+//     className={`py-3 px-4 sm:px-6 flex items-center text-sm font-medium ${
+//       isActive
+//         ? "text-indigo-600 border-b-2 border-indigo-600"
+//         : "text-gray-500 hover:text-gray-700"
+//     }`}
+//   >
+//     {Icon && <Icon className="w-4 h-4 mr-2 hidden sm:block" />}
+//     {label}
+//   </button>
+// );
+
+// // ------------------- Input Component -------------------
+// const FormInput = ({ label, value, onChange, maxLength, required = false, placeholder = "" }) => (
+//   <div className="mb-6">
+//     <label className="block text-gray-700 font-medium mb-2 text-sm">
+//       {label} {required && <span className="text-red-500">*</span>}
+//     </label>
+//     <input
+//       value={value}
+//       onChange={(e) => onChange(e.target.value)}
+//       maxLength={maxLength}
+//       placeholder={placeholder}
+//       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+//     />
+//   </div>
+// );
+
+// // ------------------- Add Resource Link -------------------
+// const AddResourceLink = ({ onAdd }) => {
+//   const [link, setLink] = useState("");
+//   return (
+//     <div className="flex mb-6">
+//       <input
+//         value={link}
+//         onChange={(e) => setLink(e.target.value)}
+//         type="text"
+//         placeholder="Add resource link"
+//         className="flex-grow p-3 border border-gray-300 rounded-l-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+//       />
+//       <button
+//         onClick={() => {
+//           if (!link) return;
+//           onAdd(link);
+//           setLink("");
+//         }}
+//         className="px-5 bg-indigo-600 text-white rounded-r-lg hover:bg-indigo-700"
+//       >
+//         Add
+//       </button>
+//     </div>
+//   );
+// };
+
+// // ------------------- Page Details Section -------------------
+// const PageDetailsSection = ({
+//   title,
+//   setTitle,
+//   description,
+//   setDescription,
+//   coverPreview,
+//   onCoverClick,
+//   onRemoveCover,
+//   buttonText,
+//   setButtonText,
+// }) => (
+//   <div className="space-y-6">
+//     <FormInput label="Book Title" value={title} onChange={setTitle} maxLength={100} required />
+//     <div className="mb-6">
+//       <label className="block text-gray-700 font-medium mb-2 text-sm">
+//         Cover Image *
+//       </label>
+//       <div
+//         onClick={onCoverClick}
+//         className="relative cursor-pointer w-full h-48 md:h-64 rounded-lg border border-dashed border-gray-300 bg-gray-50 overflow-hidden flex items-center justify-center"
+//       >
+//         {coverPreview ? (
+//           <>
+//             <img src={coverPreview} alt="cover" className="object-cover w-full h-full" />
+//             <button
+//               onClick={(e) => {
+//                 e.stopPropagation();
+//                 onRemoveCover();
+//               }}
+//               className="absolute top-3 right-3 p-1 rounded-full bg-white shadow text-red-500"
+//             >
+//               <Trash2 className="w-4 h-4" />
+//             </button>
+//           </>
+//         ) : (
+//           <div className="flex flex-col items-center text-center px-4">
+//             <ImageIcon className="w-8 h-8 text-gray-400 mb-2" />
+//             <div className="text-sm text-gray-600">Click to upload cover image</div>
+//             <div className="text-xs text-gray-400 mt-1">Recommended size: 1280x720</div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//     <FormInput
+//       label="Description"
+//       value={description}
+//       onChange={setDescription}
+//       maxLength={1000}
+//       required
+//     />
+//     <FormInput
+//       label="Button Text"
+//       value={buttonText}
+//       onChange={setButtonText}
+//       maxLength={25}
+//       required
+//     />
+//   </div>
+// );
+
+// // ------------------- Payment Details Section -------------------
+// const PaymentDetailsSection = ({
+//   files,
+//   setFiles,
+//   pricingType,
+//   setPricingType,
+//   offerDiscount,
+//   setOfferDiscount,
+//   price,
+//   setPrice,
+//   discountedPrice,
+//   setDiscountedPrice,
+// }) => {
+//   const fileInputRef = useRef(null);
+
+//   const onFilesAdded = (fileList) => {
+//     const newFilesArr = Array.from(fileList).map((f) => ({
+//       id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+//       file: f,
+//       name: f.name,
+//       size: f.size,
+//     }));
+//     setFiles((prev) => [...prev, ...newFilesArr]);
+//   };
+
+//   const removeFile = (id) => setFiles((prev) => prev.filter((f) => f.id !== id));
+
+//   const handleAddLink = (link) => {
+//     if (!link) return;
+//     setFiles((prev) => [
+//       ...prev,
+//       {
+//         id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+//         isLink: true,
+//         url: link,
+//         name: link,
+//       },
+//     ]);
+//   };
+
+//   return (
+//     <div className="space-y-6">
+//       {/* File Upload */}
+//       <div className="p-4 border rounded-lg shadow-sm bg-white">
+//         <h2 className="text-xl font-semibold mb-3">Upload Digital Files</h2>
+//         <div
+//           onClick={() => fileInputRef.current?.click()}
+//           className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 cursor-pointer hover:bg-gray-100 transition"
+//         >
+//           <UploadCloud className="w-8 h-8 text-indigo-500 mx-auto mb-3" />
+//           <p className="font-semibold text-gray-700">Click or Drag & Drop</p>
+//           <p className="text-sm text-gray-500">
+//             Unlimited files, recommended total size under 100MB
+//           </p>
+//           <input
+//             ref={fileInputRef}
+//             type="file"
+//             multiple
+//             className="hidden"
+//             onChange={(e) => {
+//               if (e.target.files?.length) onFilesAdded(e.target.files);
+//               e.target.value = null;
+//             }}
+//           />
+//         </div>
+//         <AddResourceLink onAdd={handleAddLink} />
+
+//         {files.length > 0 && (
+//           <div className="mt-3 space-y-2">
+//             {files.map((f) => (
+//               <div
+//                 key={f.id}
+//                 className="flex justify-between items-center p-2 border rounded hover:bg-gray-50"
+//               >
+//                 <div className="truncate">{f.isLink ? f.url : f.file.name}</div>
+//                 <button onClick={() => removeFile(f.id)} className="text-red-500 hover:text-red-700">
+//                   <Trash2 size={16} />
+//                 </button>
+//               </div>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Pricing */}
+//       <div className="p-4 border rounded-lg shadow-sm bg-white">
+//         <h2 className="text-xl font-semibold mb-3">Pricing</h2>
+//         <div className="mb-4">
+//           <label className="block mb-1 font-medium">Pricing Type</label>
+//           <select
+//             value={pricingType}
+//             onChange={(e) => setPricingType(e.target.value)}
+//             className="w-full border p-2 rounded hover:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+//           >
+//             <option value="fixed">Fixed Price</option>
+//             <option value="customers_decide">Customers Decide</option>
+//           </select>
+//         </div>
+
+//         {pricingType === "fixed" && (
+//           <FormInput label="Price" value={price} onChange={setPrice} placeholder="Enter price" required />
+//         )}
+
+//         <div className="flex items-center gap-2 mb-2">
+//           <input
+//             type="checkbox"
+//             checked={offerDiscount}
+//             onChange={() => setOfferDiscount(!offerDiscount)}
+//             className="h-4 w-4"
+//           />
+//           <span className="font-medium">
+//             Offer Discounted Price <HelpCircle className="inline w-4 h-4 text-gray-400" />
+//           </span>
+//         </div>
+
+//         {offerDiscount && (
+//           <FormInput
+//             label="Discounted Price"
+//             value={discountedPrice}
+//             onChange={setDiscountedPrice}
+//             placeholder="Enter discounted price"
+//             required
+//           />
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// // ------------------- Main Component -------------------
+// const PostBooks = () => {
+//   const [activeTab, setActiveTab] = useState(0); // 0=Details,1=Payment
+//   const [title, setTitle] = useState("");
+//   const [description, setDescription] = useState("");
+//   const [coverFile, setCoverFile] = useState(null);
+//   const [coverPreview, setCoverPreview] = useState(null);
+//   const coverInputRef = useRef(null);
+//   const [buttonText, setButtonText] = useState("Buy Now");
+
+//   // Payment
+//   const [files, setFiles] = useState([]);
+//   const [pricingType, setPricingType] = useState("fixed");
+//   const [offerDiscount, setOfferDiscount] = useState(true);
+//   const [price, setPrice] = useState("999");
+//   const [discountedPrice, setDiscountedPrice] = useState("499");
+
+//   const handleCoverClick = () => coverInputRef.current?.click();
+//   const handleRemoveCover = () => {
+//     setCoverFile(null);
+//     setCoverPreview(null);
+//   };
+//   const onCoverInputChange = (e) => {
+//     if (e.target.files?.[0]) {
+//       setCoverFile(e.target.files[0]);
+//       setCoverPreview(URL.createObjectURL(e.target.files[0]));
+//     }
+//     e.target.value = null;
+//   };
+
+//   // ------------------- Cloudinary Upload -------------------
+//   const uploadToCloudinary = async (file, type = "image") => {
+//   const formData = new FormData();
+//   formData.append("file", file);
+//   formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+
+//   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+//   const endpoint =
+//     type === "image"
+//       ? `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
+//       : `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+//   const res = await axios.post(endpoint, formData);
+//   return res.data.secure_url;
+// };
+
+//   // ------------------- Save & Next -------------------
+//   const handleSaveAndNext = () => {
+//     if (!title || !description || !coverFile) return toast.error("Please fill all details & upload cover!");
+//     toast.success("Page Details Saved!");
+//     setActiveTab(1);
+//   };
+
+//   // ------------------- Save & Publish -------------------
+//   const handleSaveAndPublish = async () => {
+//     if (!title || !description || !coverFile || files.length === 0) {
+//       return toast.error("Fill all details & upload files!");
+//     }
+//     toast.info("Publishing book...");
+
+//     try {
+//       // 1️⃣ Upload cover
+//       const coverUrl = await uploadToCloudinary(coverFile, "image");
+
+//       // 2️⃣ Upload book files
+//       const uploadedFiles = await Promise.all(
+//         files.map(async (f) => {
+//           if (f.isLink) return { name: f.name, url: f.url };
+//           const url = await uploadToCloudinary(f.file, "file");
+//           return { name: f.file.name, url };
+//         })
+//       );
+
+//       // 3️⃣ Save book data to backend
+//      await axios.post("http://localhost:5000/api/books", {
+//        title,
+//        description,
+//        coverUrl,
+//        files: uploadedFiles,
+//        pricing: { type: pricingType, price, discountedPrice },
+//        buttonText,
+//        published: true,
+//      });
+
+//       toast.success("Book Published Successfully!");
+//       setActiveTab(0);
+//       setTitle("");
+//       setDescription("");
+//       setCoverFile(null);
+//       setCoverPreview(null);
+//       setFiles([]);
+//     } catch (error) {
+//       console.error(error);
+//       toast.error("Publishing failed!");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-gray-50 p-4 w-full">
+//       <ToastContainer position="top-right" autoClose={2000} />
+//       <div className="w-full bg-white overflow-hidden rounded-lg shadow-md">
+//         <div className="flex border-b border-gray-200 bg-white p-2 sm:p-0">
+//           <Tab label="Page Details" Icon={Pencil} isActive={activeTab === 0} onClick={() => setActiveTab(0)} />
+//           <Tab
+//             label="Payment Page Details"
+//             Icon={CreditCard}
+//             isActive={activeTab === 1}
+//             onClick={() => setActiveTab(1)}
+//           />
+//           <Tab label="Advanced Settings" Icon={Settings} isActive={activeTab === 2} onClick={() => setActiveTab(2)} />
+//         </div>
+
+//         <div className="p-4 sm:p-6 lg:p-8">
+//           {activeTab === 0 && (
+//             <>
+//               <input
+//                 ref={coverInputRef}
+//                 type="file"
+//                 accept="image/*"
+//                 className="hidden"
+//                 onChange={onCoverInputChange}
+//               />
+//               <PageDetailsSection
+//                 title={title}
+//                 setTitle={setTitle}
+//                 description={description}
+//                 setDescription={setDescription}
+//                 coverPreview={coverPreview}
+//                 onCoverClick={handleCoverClick}
+//                 onRemoveCover={handleRemoveCover}
+//                 buttonText={buttonText}
+//                 setButtonText={setButtonText}
+//               />
+//               <div className="mt-8 flex justify-end">
+//                 <button
+//                   onClick={handleSaveAndNext}
+//                   className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-lg"
+//                 >
+//                   Save and Next
+//                 </button>
+//               </div>
+//             </>
+//           )}
+
+//           {activeTab === 1 && (
+//             <>
+//               <PaymentDetailsSection
+//                 files={files}
+//                 setFiles={setFiles}
+//                 pricingType={pricingType}
+//                 setPricingType={setPricingType}
+//                 offerDiscount={offerDiscount}
+//                 setOfferDiscount={setOfferDiscount}
+//                 price={price}
+//                 setPrice={setPrice}
+//                 discountedPrice={discountedPrice}
+//                 setDiscountedPrice={setDiscountedPrice}
+//               />
+//               <div className="mt-8 flex justify-end gap-4">
+//                 <button
+//                   onClick={() => setActiveTab(0)}
+//                   className="px-6 py-3 bg-gray-200 rounded-xl hover:bg-gray-300 shadow"
+//                 >
+//                   Previous
+//                 </button>
+//                 <button
+//                   onClick={handleSaveAndPublish}
+//                   className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-lg"
+//                 >
+//                   Save and Publish
+//                 </button>
+//               </div>
+//             </>
+//           )}
+
+//           {activeTab === 2 && <div className="p-6 text-gray-500 text-center">Coming Soon</div>}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PostBooks;
+
+// PostBooks.jsx (Updated for Beautiful UI and Responsiveness)
+
+import React, { useRef, useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Trash2,
   Image as ImageIcon,
   UploadCloud,
-  File as FileIcon,
-  Plus,
-  ChevronDown,
+  Pencil,
   CreditCard,
   Settings,
-  Pencil,
-  Quote,
   HelpCircle,
-  Package,
 } from "lucide-react";
 
-/* 
- PostBooks.jsx
- - Cover upload (click to pick), preview & remove
- - Rich text editor (bold/italic/underline) using execCommand
- - Insert image via URL OR local file (file input)
- - Dropzone file uploads + link add
- - Controlled inputs
- - Designed to render inside Dashboard content area
-*/
-
-const ToggleSwitch = ({ checked, onChange }) => (
-  <button
-    onClick={onChange}
-    className={`relative inline-flex h-6 w-11 rounded-full transition-colors duration-200 focus:outline-none ${
-      checked ? "bg-indigo-600" : "bg-gray-200"
-    }`}
-    role="switch"
-    aria-checked={checked}
-  >
-    <span
-      className={`inline-block h-5 w-5 rounded-full bg-white transform transition-transform ${
-        checked ? "translate-x-5" : "translate-x-0"
-      }`}
-    />
-  </button>
-);
-
+// ------------------- Tab Component (Improved Styling) -------------------
 const Tab = ({ label, Icon, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`py-3 px-4 sm:px-6 flex items-center text-sm font-medium ${
+    className={`py-3 px-3 sm:px-6 flex items-center text-sm font-semibold transition duration-200 ease-in-out cursor-pointer ${
       isActive
-        ? "text-indigo-600 border-b-2 border-indigo-600"
-        : "text-gray-500 hover:text-gray-700"
+        ? "text-indigo-700 border-b-3 border-indigo-600 bg-indigo-50"
+        : "text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
     }`}
   >
-    {Icon && <Icon className="w-4 h-4 mr-2 hidden sm:block" />}
-    {label}
+        {Icon && <Icon className="w-4 h-4 mr-2 hidden sm:block" />}    {label} {" "}
   </button>
 );
 
+// ------------------- FormInput Component (Improved Styling) -------------------
 const FormInput = ({
   label,
   value,
@@ -62,364 +483,160 @@ const FormInput = ({
   maxLength,
   required = false,
   placeholder = "",
+  type = "text",
 }) => (
   <div className="mb-6">
-    <label className="block text-gray-700 font-medium mb-2 text-sm">
-      {label} {required && <span className="text-red-500">*</span>}
+       {" "}
+    <label className="block text-gray-700 font-semibold mb-2 text-sm">
+            {label} {required && <span className="text-red-500">*</span>}   {" "}
     </label>
-    <div className="relative">
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        maxLength={maxLength}
-        placeholder={placeholder}
-        className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-      />
-      {maxLength && (
-        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-500 bg-white px-1">
-          {value.length}/{maxLength}
-        </span>
-      )}
-    </div>
+       {" "}
+    <input
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      maxLength={maxLength}
+      placeholder={placeholder}
+      type={type} // Added type support
+      className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+    />
+     {" "}
   </div>
 );
 
-const InsertImageButton = ({ editorRef, setEditorHtml }) => {
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [url, setUrl] = useState("");
-  const fileInputRef = useRef(null);
-
-  // Insert by URL
-  const insertByURL = () => {
-    if (!url) return;
-    const imgHtml = `<img src="${url}" alt="inserted" style="max-width:100%; display:block; margin:8px 0;" />`;
-    // Insert HTML at caret
-    document.execCommand("insertHTML", false, imgHtml);
-    setUrl("");
-    setShowPrompt(false);
-    if (editorRef.current) setEditorHtml(editorRef.current.innerHTML);
-  };
-
-  // Insert by local file
-  const onLocalFile = (file) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const src = e.target.result;
-      const imgHtml = `<img src="${src}" alt="inserted" style="max-width:100%; display:block; margin:8px 0;" />`;
-      document.execCommand("insertHTML", false, imgHtml);
-      if (editorRef.current) setEditorHtml(editorRef.current.innerHTML);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setShowPrompt((s) => !s)}
-        className="p-2 hover:bg-gray-200 rounded"
-      >
-        <ImageIcon className="w-4 h-4" />
-      </button>
-
-      {showPrompt && (
-        <div className="absolute left-20 mt-2 w-72 bg-white border border-gray-200 rounded shadow p-3 z-50">
-          <div className="mb-2 text-xs text-gray-500">Insert image by URL</div>
-          <input
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="w-full p-2 border rounded mb-2 text-sm"
-            placeholder="https://..."
-          />
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => setShowPrompt(false)}
-              className="px-3 py-1 border rounded text-sm"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={insertByURL}
-              className="px-3 py-1 bg-indigo-600 text-white rounded text-sm"
-            >
-              Insert
-            </button>
-          </div>
-
-          <div className="border-t my-2" />
-
-          <div className="text-xs text-gray-500 mb-2">
-            Or upload from your device
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              if (e.target.files?.[0]) onLocalFile(e.target.files[0]);
-              e.target.value = null;
-            }}
-          />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full px-3 py-2 bg-gray-100 rounded text-sm"
-          >
-            Choose image
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
+// ------------------- Add Resource Link (Improved Styling) -------------------
 const AddResourceLink = ({ onAdd }) => {
   const [link, setLink] = useState("");
   return (
-    <div className="flex mb-6">
+    <div className="flex mb-6 mt-4">
+           {" "}
       <input
         value={link}
         onChange={(e) => setLink(e.target.value)}
-        type="text"
-        placeholder="Add resource link"
-        className="flex-grow p-3 border border-gray-300 rounded-l-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+        type="url"
+        placeholder="Add external resource link (e.g., Google Drive link)"
+        className="flex-grow p-3 border border-gray-300 rounded-l-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
       />
+           {" "}
       <button
         onClick={() => {
           if (!link) return;
           onAdd(link);
           setLink("");
         }}
-        className="px-5 bg-indigo-600 text-white rounded-r-lg"
+        className="px-5 bg-indigo-600 text-white font-sans font-semibold rounded-r-xl hover:bg-indigo-700 transition duration-150 shadow-md disabled:opacity-50"
+        disabled={!link}
       >
-        Add
+                Add      {" "}
       </button>
+         {" "}
     </div>
   );
 };
 
+// ------------------- Page Details Section (Improved UI) -------------------
 const PageDetailsSection = ({
   title,
   setTitle,
+  description,
+  setDescription,
   coverPreview,
   onCoverClick,
   onRemoveCover,
-  editorHtml,
-  setEditorHtml,
   buttonText,
   setButtonText,
-  isCategoryEnabled,
-  setIsCategoryEnabled,
-  isAboutMeEnabled,
-  setIsAboutMeEnabled,
-}) => {
-  const editorRef = useRef(null);
-  const [boldActive, setBoldActive] = useState(false);
-  const [italicActive, setItalicActive] = useState(false);
-  const [underlineActive, setUnderlineActive] = useState(false);
-
-  const applyFormat = (cmd) => {
-    document.execCommand(cmd, false, null);
-    setTimeout(() => {
-      if (editorRef.current) setEditorHtml(editorRef.current.innerHTML);
-    }, 0);
-    editorRef.current?.focus();
-  };
-
-  useEffect(() => {
-    const handler = () => {
-      try {
-        setBoldActive(document.queryCommandState("bold"));
-        setItalicActive(document.queryCommandState("italic"));
-        setUnderlineActive(document.queryCommandState("underline"));
-      } catch {}
-    };
-    document.addEventListener("selectionchange", handler);
-    return () => document.removeEventListener("selectionchange", handler);
-  }, []);
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800">
-        Tell us about your Payment Page
-      </h2>
-
-      <FormInput
-        label=" Page Title"
-        value={title}
-        onChange={setTitle}
-        maxLength={75}
-        required
-      />
-
-      <div className="mb-6">
-        <label className="block text-gray-700 font-medium mb-2 text-sm">
-          Cover Image *
-        </label>
-        <div
-          onClick={onCoverClick}
-          className="relative cursor-pointer w-full h-48 md:h-64 rounded-lg border border-dashed border-gray-300 bg-gray-50 overflow-hidden flex items-center justify-center"
-        >
-          {coverPreview ? (
-            <>
-              <img
-                src={coverPreview}
-                alt="cover"
-                className="object-cover w-full h-full"
-              />
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemoveCover();
-                }}
-                className="absolute top-3 right-3 p-1 rounded-full bg-white shadow text-red-500"
-                aria-label="Remove image"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col items-center text-center px-4">
-              <ImageIcon className="w-8 h-8 text-gray-400 mb-2" />
-              <div className="text-sm text-gray-600">
-                Click to upload cover image
-              </div>
-              <div className="text-xs text-gray-400 mt-1">
-                Recommended size: 1280x720
-              </div>
+}) => (
+  <div className="space-y-6  font-sans bg-white p-6 rounded-xl shadow-inner">
+       {" "}
+    <FormInput
+      label="Book Title"
+      value={title}
+      onChange={setTitle}
+      maxLength={100}
+      required
+      placeholder="Enter the main title"
+    />
+       {/* Cover Image Upload Area */}   {" "}
+    <div className="mb-6">
+           {" "}
+      <label className="block text-gray-700  font-sans font-semibold mb-2 text-sm">
+                Cover Image *      {" "}
+      </label>
+           {" "}
+      <div
+        onClick={onCoverClick}
+        className="relative cursor-pointer w-full h-48 md:h-64 rounded-xl border-3 border-dashed border-indigo-300 bg-indigo-50 overflow-hidden flex items-center justify-center transition duration-200 hover:border-indigo-500 hover:bg-indigo-100"
+      >
+               {" "}
+        {coverPreview ? (
+          <>
+                       {" "}
+            <img
+              src={coverPreview}
+              alt="cover"
+              className="object-cover w-full h-full"
+            />
+                       {" "}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemoveCover();
+              }}
+              className="absolute top-3 right-3 p-2 rounded-full bg-red-500 shadow-lg text-white hover:bg-red-600 transition duration-150 z-10"
+              title="Remove Cover Image"
+            >
+                            <Trash2 className="w-4 h-4" />           {" "}
+            </button>
+                     {" "}
+          </>
+        ) : (
+          <div className="flex flex-col items-center text-center px-4">
+                        <ImageIcon className="w-10 h-10 text-indigo-400 mb-3" />
+                       {" "}
+            <div className="text-md text-indigo-600  font-sans font-semibold">
+              Click to upload cover image
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <label className="block text-gray-700 font-medium mb-2 text-sm">
-          Description *
-        </label>
-        <div className="border border-gray-300 rounded-lg">
-          <div className="flex items-center p-2 border-b space-x-2 text-gray-600 bg-gray-50 rounded-t-lg">
-            <button
-              onClick={() => applyFormat("bold")}
-              className={`p-2 rounded ${
-                boldActive ? "bg-indigo-600 text-white" : "hover:bg-gray-200"
-              }`}
-              title="Bold"
-            >
-              <strong>B</strong>
-            </button>
-            <button
-              onClick={() => applyFormat("italic")}
-              className={`p-2 rounded ${
-                italicActive ? "bg-indigo-600 text-white" : "hover:bg-gray-200"
-              }`}
-              title="Italic"
-            >
-              <em>I</em>
-            </button>
-            <button
-              onClick={() => applyFormat("underline")}
-              className={`p-2 rounded ${
-                underlineActive
-                  ? "bg-indigo-600 text-white"
-                  : "hover:bg-gray-200"
-              }`}
-              title="Underline"
-            >
-              <span className="underline">U</span>
-            </button>
-
-            <div className="border-l h-6 mx-2" />
-            <InsertImageButton
-              editorRef={editorRef}
-              setEditorHtml={setEditorHtml}
-            />
-            <div className="ml-auto text-xs text-gray-500">
-              Tip: Select text then press the buttons
+                       {" "}
+            <div className="text-xs  font-sans text-gray-500 mt-1">
+              PNG, JPG, SVG. Max 5MB.
             </div>
+                     {" "}
           </div>
-
-         <div
-  ref={editorRef}
-  contentEditable
-  suppressContentEditableWarning
-  className="min-h-[160px] p-4 bg-white rounded-b-lg outline-none text-sm"
-  onInput={(e) => setEditorHtml(e.currentTarget.innerHTML)}
-  dangerouslySetInnerHTML={{ __html: editorHtml }}
-  dir="ltr"
-  style={{
-    direction: "ltr",
-    unicodeBidi: "plaintext",
-    textAlign: "left",
-    whiteSpace: "pre-wrap"
-  }}
-/>
-
-        </div>
+        )}
+             {" "}
       </div>
-
-      <FormInput
-        label="Button Text"
-        value={buttonText}
-        onChange={setButtonText}
-        maxLength={25}
-        required
-      />
-
-      {/* <div className="pt-4 space-y-4">
-        <h3 className="text-xl font-semibold text-gray-800">
-          Optional Sections
-        </h3>
-
-        <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
-          <div className="flex justify-between items-center mb-3">
-            <p className="text-base font-medium text-gray-700">
-              All Category & Many More
-            </p>
-            <ToggleSwitch
-              checked={isCategoryEnabled}
-              onChange={() => setIsCategoryEnabled(!isCategoryEnabled)}
-            />
-          </div>
-          <div className="flex items-center justify-between p-3 bg-gray-100 rounded-md mb-3">
-            <span className="text-sm text-gray-600">8 items added</span>
-          </div>
-          <button className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700">
-            <Pencil className="w-4 h-4 mr-2" /> Modify Gallery
-          </button>
-        </div>
-
-        <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
-          <div className="flex justify-between items-center mb-3">
-            <p className="text-base font-medium text-gray-700">About Me</p>
-            <ToggleSwitch
-              checked={isAboutMeEnabled}
-              onChange={() => setIsAboutMeEnabled(!isAboutMeEnabled)}
-            />
-          </div>
-          <button
-            className="flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700"
-            disabled={!isAboutMeEnabled}
-          >
-            <Pencil className="w-4 h-4 mr-2" /> Modify About Me
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-          <button className="flex items-center justify-center p-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-            <Quote className="w-4 h-4 mr-2" /> 99 Testimonials
-          </button>
-          <button className="flex items-center justify-center p-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-            <HelpCircle className="w-4 h-4 mr-2" /> FAQ
-          </button>
-          <button className="flex items-center justify-center p-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-            <Package className="w-4 h-4 mr-2" /> Showcase Products
-          </button>
-        </div>
-      </div> */}
+         {" "}
     </div>
-  );
-};
+    {/* Description Input */}
+    <div className="mb-6">
+      <label className="block text-gray-700 font-semibold   font-sans mb-2 text-sm">
+        Description {<span className="text-red-500">*</span>}
+      </label>
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        maxLength={1000}
+        rows={4}
+        placeholder="Describe your book/resource..."
+        className="w-full p-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 resize-none"
+      />
+      <p className="text-xs text-right  font-sans text-gray-500 mt-1">
+        {description.length} / 1000 characters
+      </p>
+    </div>
+       {" "}
+    <FormInput
+      label="Call-to-Action Button Text"
+      value={buttonText}
+      onChange={setButtonText}
+      maxLength={25}
+      required
+      placeholder="e.g., Buy Now, Download, Learn More"
+    />
+     {" "}
+  </div>
+);
 
+// ------------------- Payment Details Section (Improved UI) -------------------
 const PaymentDetailsSection = ({
   files,
   setFiles,
@@ -431,8 +648,6 @@ const PaymentDetailsSection = ({
   setPrice,
   discountedPrice,
   setDiscountedPrice,
-  limitQuantity,
-  setLimitQuantity,
 }) => {
   const fileInputRef = useRef(null);
 
@@ -446,14 +661,9 @@ const PaymentDetailsSection = ({
     setFiles((prev) => [...prev, ...newFilesArr]);
   };
 
-  const onDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.dataTransfer?.files?.length) onFilesAdded(e.dataTransfer.files);
-  };
-  const onDragOver = (e) => e.preventDefault();
   const removeFile = (id) =>
     setFiles((prev) => prev.filter((f) => f.id !== id));
+
   const handleAddLink = (link) => {
     if (!link) return;
     setFiles((prev) => [
@@ -468,304 +678,282 @@ const PaymentDetailsSection = ({
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800">
-        Upload your digital files
-      </h2>
-
-      <div
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 cursor-pointer"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <UploadCloud className="w-8 h-8 text-indigo-500 mx-auto mb-3" />
-        <p className="font-semibold text-gray-700">Upload or drag & drop</p>
-        <p className="text-sm text-gray-500">
-          Unlimited files, recommended total size under 100MB
-        </p>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={(e) => {
-            if (e.target.files?.length) onFilesAdded(e.target.files);
-            e.target.value = null;
-          }}
-        />
-      </div>
-
-      <div className="flex items-center my-4">
-        <div className="flex-grow border-t border-gray-300" />
-        <span className="mx-4 text-sm text-gray-500">OR</span>
-        <div className="flex-grow border-t border-gray-300" />
-      </div>
-
-      <AddResourceLink onAdd={handleAddLink} />
-
-      <div className="flex justify-between items-end mb-2">
-        <p className="font-medium text-gray-700">Uploads ({files.length})</p>
-        <p className="text-sm text-gray-500">
-          Total files size not tracked (demo)
-        </p>
-      </div>
-
-      <div className="space-y-3">
-        {files.length === 0 && (
-          <div className="p-4 text-sm text-gray-500 bg-white border border-gray-200 rounded">
-            No uploads yet
+    <div className="space-y-8 bg-white p-6 rounded-xl shadow-inner">
+            {/* File Upload Card */}     {" "}
+      <div className="p-5 border border-indigo-200 rounded-xl shadow-md bg-indigo-50">
+               {" "}
+        <h2 className="text-xl font-bold  font-sans text-indigo-700 mb-4">
+          Files & Content
+        </h2>
+               {/* Upload Drop Zone */}       {" "}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="border-2 border-dashed border-indigo-400 rounded-xl p-8 text-center bg-white cursor-pointer hover:bg-gray-50 transition duration-200"
+        >
+                   {" "}
+          <UploadCloud className="w-10 h-10 text-indigo-500 mx-auto mb-3" />   
+               {" "}
+          <p className="font-bold  font-sans text-indigo-700">
+            Click or Drag & Drop Files
+          </p>
+                   {" "}
+          <p className="text-sm text-gray-500  font-sans mt-1">
+                        PDFs, Zips, Images (Files should be the actual product).
+                     {" "}
+          </p>
+                   {" "}
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files?.length) onFilesAdded(e.target.files);
+              e.target.value = null;
+            }}
+          />
+                 {" "}
+        </div>
+        {/* Resource Link Input */}
+                <AddResourceLink onAdd={handleAddLink} />       {" "}
+        {files.length > 0 && (
+          <div className="mt-5 space-y-2 border-t pt-4">
+            <p className="font-semibold  font-sans text-gray-700">
+              Attached Resources:
+            </p>
+                       {" "}
+            {files.map((f) => (
+              <div
+                key={f.id}
+                className="flex justify-between items-center p-3 border rounded-xl bg-white shadow-sm hover:border-red-400 transition"
+              >
+                               {" "}
+                <div className="truncate text-sm font-medium text-gray-800">
+                  {f.isLink ? f.url : f.name}
+                </div>
+                               {" "}
+                <button
+                  onClick={() => removeFile(f.id)}
+                  className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition cursor-pointer"
+                  title="Remove File"
+                >
+                                    <Trash2 size={16} />               {" "}
+                </button>
+                             {" "}
+              </div>
+            ))}
+                     {" "}
           </div>
         )}
-        {files.map((f) => (
-          <div
-            key={f.id}
-            className="flex items-center justify-between p-4 border border-gray-300 rounded-lg bg-white shadow-sm"
-          >
-            <div className="flex items-center space-x-3">
-              <FileIcon className="w-5 h-5 text-gray-500" />
-              <div>
-                <div className="text-sm text-gray-700">{f.name}</div>
-                <div className="text-xs text-gray-400">
-                  {f.isLink
-                    ? "Resource link"
-                    : `${(f.size / 1024).toFixed(2)} KB`}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <a
-                href={f.isLink ? f.url : URL.createObjectURL(f.file)}
-                target="_blank"
-                rel="noreferrer"
-                className="text-indigo-600 text-sm"
-              >
-                Open
-              </a>
-              <button
-                onClick={() => removeFile(f.id)}
-                className="text-gray-400 hover:text-red-500 p-1 rounded-full"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
+             {" "}
       </div>
-
-      <h3 className="text-xl font-semibold text-gray-800 pt-4">Pricing</h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button
-          onClick={() => setPricingType("fixed")}
-          className={`p-4 rounded-xl border-2 text-left ${
-            pricingType === "fixed"
-              ? "border-indigo-600 bg-indigo-50"
-              : "border-gray-300 bg-white"
-          }`}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="font-medium text-gray-800">Fixed Price</p>
-              <p className="text-sm text-gray-500">
-                Charge a one-time fixed pay
-              </p>
-            </div>
-            <div
-              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                pricingType === "fixed"
-                  ? "border-indigo-600 bg-indigo-600"
-                  : "border-gray-400"
-              }`}
-            >
-              {pricingType === "fixed" && (
-                <div className="w-2 h-2 rounded-full bg-white" />
-              )}
-            </div>
-          </div>
-        </button>
-
-        <button
-          onClick={() => setPricingType("customers_decide")}
-          className={`p-4 rounded-xl border-2 text-left ${
-            pricingType === "customers_decide"
-              ? "border-indigo-600 bg-indigo-50"
-              : "border-gray-300 bg-white"
-          }`}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="font-medium text-gray-800">
-                Customers decide price
-              </p>
-              <p className="text-sm text-gray-500">
-                Let customers pay any price
-              </p>
-            </div>
-            <div
-              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                pricingType === "customers_decide"
-                  ? "border-indigo-600 bg-indigo-600"
-                  : "border-gray-400"
-              }`}
-            >
-              {pricingType === "customers_decide" && (
-                <div className="w-2 h-2 rounded-full bg-white" />
-              )}
-            </div>
-          </div>
-        </button>
-      </div>
-
-      {pricingType === "fixed" && (
-        <FormInput
-          label="Price"
-          value={price}
-          onChange={setPrice}
-          placeholder="Enter price"
-          required
-        />
-      )}
-
-      <div className="flex items-center space-x-2 pt-2">
-        <input
-          id="discount"
-          type="checkbox"
-          checked={offerDiscount}
-          onChange={() => setOfferDiscount(!offerDiscount)}
-          className="rounded text-indigo-600 h-4 w-4 border-gray-300"
-        />
-        <label htmlFor="discount" className="text-sm font-medium text-gray-700">
-          Offer discounted price{" "}
-          <HelpCircle className="w-4 h-4 inline ml-1 text-gray-400" />
-        </label>
-      </div>
-
-      {offerDiscount && (
-        <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2 text-sm">
-            Discounted price <span className="text-red-500">*</span>
+            {/* Pricing Card */}     {" "}
+      <div className="p-5 border border-green-200 rounded-xl shadow-md bg-green-50">
+               {" "}
+        <h2 className="text-xl font-bold text-green-700   font-sans mb-4">
+          Pricing Setup
+        </h2>
+               {" "}
+        <div className="mb-4">
+                   {" "}
+          <label className="block mb-1 font-semibold  font-sans text-gray-700">
+            Pricing Type
           </label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-              ₹
-            </span>
-            <input
-              type="number"
-              value={discountedPrice}
-              onChange={(e) => setDiscountedPrice(e.target.value)}
-              className="w-full p-3 pl-8 pr-44 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-green-600 font-semibold bg-white px-1">
-              {price && `₹ ${price}`}
-            </span>
-          </div>
+          
+          <select
+            value={pricingType}
+            onChange={(e) => setPricingType(e.target.value)}
+            className="w-full border p-3 rounded-xl shadow-sm hover:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+          >
+                        <option value="fixed">Fixed Price</option>           {" "}
+            <option value="customers_decide">
+              Customers Decide (Pay What You Want)
+            </option>
+                     {" "}
+          </select>
+                 {" "}
         </div>
-      )}
-
+               {" "}
+        {pricingType === "fixed" && (
+          <FormInput
+            label="Base Price (₹)"
+            value={price}
+            onChange={setPrice}
+            placeholder="Enter price in Rupees"
+            required
+            type="number"
+          />
+        )}
+               {" "}
+        <div
+          className="flex items-center gap-3 mb-4 mt-6 p-2 rounded-lg hover:bg-green-100 transition duration-150 cursor-pointer"
+          onClick={() => setOfferDiscount(!offerDiscount)}
+        >
+                   {" "}
+          <input
+            type="checkbox"
+            checked={offerDiscount}
+            onChange={() => setOfferDiscount(!offerDiscount)}
+            className="h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer"
+          />
+                   {" "}
+          <span className="font-semibold  font-sans text-gray-700">
+                        Offer Discounted Price{" "}
+            <HelpCircle className="inline w-4 h-4 text-green-500 ml-1" />       
+             {" "}
+          </span>
+                 {" "}
+        </div>
+               {" "}
+        {offerDiscount && (
+          <FormInput
+            label="Discounted Price (₹)"
+            value={discountedPrice}
+            onChange={setDiscountedPrice}
+            placeholder="Enter discounted price in Rupees"
+            required
+            type="number"
+          />
+        )}
+             {" "}
+      </div>
+         {" "}
     </div>
   );
 };
 
-// PostBooks root: ties PageDetailsSection and PaymentDetailsSection together
+// ------------------- Main Component (Improved Layout and Buttons) -------------------
 const PostBooks = () => {
-  const [activeTab, setActiveTab] = useState("details");
-
-  // Page details
-  const [title, setTitle] = useState("Trendy Reel Bundle");
+  const [activeTab, setActiveTab] = useState(0);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const coverInputRef = useRef(null);
+  const [buttonText, setButtonText] = useState("Buy Now"); // Payment
 
-  const [editorHtml, setEditorHtml] = useState(
-    "Take your content game to the next level with the All-in-One Reel Bundle — a complete package of ready-to-use, high-converting reel templates..."
-  );
-  const [buttonText, setButtonText] = useState("Buy Now");
-  const [isCategoryEnabled, setIsCategoryEnabled] = useState(true);
-  const [isAboutMeEnabled, setIsAboutMeEnabled] = useState(false);
-
-  // Payment
   const [files, setFiles] = useState([]);
   const [pricingType, setPricingType] = useState("fixed");
   const [offerDiscount, setOfferDiscount] = useState(true);
   const [price, setPrice] = useState("999");
-  const [discountedPrice, setDiscountedPrice] = useState("49");
-  const [limitQuantity, setLimitQuantity] = useState(false);
-
-  // Cover handlers
-  const onCoverSelected = (file) => {
-    if (!file) return;
-    setCoverFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => setCoverPreview(e.target.result);
-    reader.readAsDataURL(file);
-  };
+  const [discountedPrice, setDiscountedPrice] = useState("499");
 
   const handleCoverClick = () => coverInputRef.current?.click();
   const handleRemoveCover = () => {
     setCoverFile(null);
     setCoverPreview(null);
   };
-
   const onCoverInputChange = (e) => {
-    if (e.target.files?.[0]) onCoverSelected(e.target.files[0]);
+    if (e.target.files?.[0]) {
+      setCoverFile(e.target.files[0]);
+      setCoverPreview(URL.createObjectURL(e.target.files[0]));
+    }
     e.target.value = null;
-  };
+  }; // ------------------- Cloudinary Upload -------------------
 
-  const handleSaveAndPublish = () => {
-    const payload = {
-      title,
-      buttonText,
-      coverFileName: coverFile?.name || null,
-      descriptionHtml: editorHtml,
-      options: {
-        categoriesEnabled: isCategoryEnabled,
-        aboutMeEnabled: isAboutMeEnabled,
-      },
-      uploads: files.map((f) =>
-        f.isLink
-          ? { type: "link", url: f.url }
-          : { type: "file", name: f.name, size: f.size }
-      ),
-      pricing: {
-        pricingType,
-        price,
-        discountedPrice: offerDiscount ? discountedPrice : null,
-        limitQuantity,
-      },
-    };
-    console.log("Publish payload:", payload);
-    alert("Save & Publish clicked — check console for payload.");
+  const uploadToCloudinary = async (file, type = "image") => {
+    // ... (logic remains same)
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+    );
+
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+    const endpoint =
+      type === "image"
+        ? `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
+        : `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+    const res = await axios.post(endpoint, formData);
+    return res.data.secure_url;
+  }; // ------------------- Save & Next -------------------
+
+  const handleSaveAndNext = () => {
+    if (!title || !description || !coverFile)
+      return toast.error("Please fill all details & upload cover!");
+    toast.success("Page Details Saved!");
+    setActiveTab(1);
+  }; // ------------------- Save & Publish -------------------
+
+  const handleSaveAndPublish = async () => {
+    if (!title || !description || !coverFile || files.length === 0) {
+      return toast.error("Fill all details & upload files!");
+    }
+    toast.info("Publishing book...");
+
+    try {
+      // 1️⃣ Upload cover
+      const coverUrl = await uploadToCloudinary(coverFile, "image"); // 2️⃣ Upload book files
+
+      const uploadedFiles = await Promise.all(
+        files.map(async (f) => {
+          if (f.isLink) return { name: f.name, url: f.url };
+          const url = await uploadToCloudinary(f.file, "file");
+          return { name: f.file.name, url };
+        })
+      ); // 3️⃣ Save book data to backend (Using absolute URL as discussed)
+
+      await axios.post("http://localhost:5000/api/books", {
+        title,
+        description,
+        coverUrl,
+        files: uploadedFiles,
+        pricing: { type: pricingType, price, discountedPrice },
+        buttonText,
+        published: true,
+      });
+
+      toast.success("Book Published Successfully!");
+      setActiveTab(0);
+      setTitle("");
+      setDescription("");
+      setCoverFile(null);
+      setCoverPreview(null);
+      setFiles([]);
+    } catch (error) {
+      console.error(error);
+      toast.error("Publishing failed! Check console for details.");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-0 w-full">
-      <div className="w-full bg-white overflow-hidden">
-        {/* Tabs */}
-        <div className="flex border-b border-gray-200 bg-white p-2 sm:p-0">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8 flex justify-center w-full">
+            <ToastContainer position="top-right" autoClose={2000} />     {" "}
+      <div className="w-full max-w-4xl bg-white overflow-hidden rounded-2xl shadow-2xl">
+               {/* Tab Navigation */}       {" "}
+        <div className="flex border-b border-gray-200 bg-white  font-sans shadow-sm sticky top-0 z-10">
+           {" "}
           <Tab
             label="Page Details"
             Icon={Pencil}
-            isActive={activeTab === "details"}
-            onClick={() => setActiveTab("details")}
+            isActive={activeTab === 0}
+            onClick={() => setActiveTab(0)}
           />
+                   {" "}
           <Tab
-            label="Payment Page Details"
+            label="Payment & Files"
             Icon={CreditCard}
-            isActive={activeTab === "payment"}
-            onClick={() => setActiveTab("payment")}
+            isActive={activeTab === 1}
+            onClick={() => handleSaveAndNext()} // Ensure details are filled before moving
           />
+                   {" "}
           <Tab
-            label="Advanced Settings"
+            label="Settings"
             Icon={Settings}
-            isActive={activeTab === "advanced"}
-            onClick={() => setActiveTab("advanced")}
+            isActive={activeTab === 2}
+            onClick={() => setActiveTab(2)}
           />
+                 {" "}
         </div>
-
-        <div className="p-4 sm:p-6 lg:p-8">
-          {activeTab === "details" && (
+               {" "}
+        <div className="p-4 sm:p-8">
+                   {" "}
+          {activeTab === 0 && (
             <>
+                           {" "}
               <input
                 ref={coverInputRef}
                 type="file"
@@ -773,67 +961,90 @@ const PostBooks = () => {
                 className="hidden"
                 onChange={onCoverInputChange}
               />
+              <h2 className="text-2xl font-extrabold  font-sans text-gray-800 mb-6  pb-2">
+                Book Information
+              </h2>
+                           {" "}
               <PageDetailsSection
                 title={title}
                 setTitle={setTitle}
+                description={description}
+                setDescription={setDescription}
                 coverPreview={coverPreview}
                 onCoverClick={handleCoverClick}
                 onRemoveCover={handleRemoveCover}
-                editorHtml={editorHtml}
-                setEditorHtml={setEditorHtml}
                 buttonText={buttonText}
                 setButtonText={setButtonText}
-                isCategoryEnabled={isCategoryEnabled}
-                setIsCategoryEnabled={setIsCategoryEnabled}
-                isAboutMeEnabled={isAboutMeEnabled}
-                setIsAboutMeEnabled={setIsAboutMeEnabled}
               />
+                           {" "}
+              <div className="mt-8 flex justify-end">
+                               {" "}
+                <button
+                  onClick={handleSaveAndNext}
+                  className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg transition duration-150 transform hover:scale-[1.02] disabled:opacity-50"
+                  disabled={!title || !description || !coverFile}
+                >
+                                    Save & Next →                {" "}
+                </button>
+                             {" "}
+              </div>
+                         {" "}
             </>
           )}
-
-          {activeTab === "payment" && (
-            <PaymentDetailsSection
-              files={files}
-              setFiles={setFiles}
-              pricingType={pricingType}
-              setPricingType={setPricingType}
-              offerDiscount={offerDiscount}
-              setOfferDiscount={setOfferDiscount}
-              price={price}
-              setPrice={setPrice}
-              discountedPrice={discountedPrice}
-              setDiscountedPrice={setDiscountedPrice}
-              limitQuantity={limitQuantity}
-              setLimitQuantity={setLimitQuantity}
-            />
+                   {" "}
+          {activeTab === 1 && (
+            <>
+              <h2 className="text-2xl font-extrabold  font-sans text-gray-800 mb-6 border-b pb-2">
+                Pricing & Content
+              </h2>
+                           {" "}
+              <PaymentDetailsSection
+                files={files}
+                setFiles={setFiles}
+                pricingType={pricingType}
+                setPricingType={setPricingType}
+                offerDiscount={offerDiscount}
+                setOfferDiscount={setOfferDiscount}
+                price={price}
+                setPrice={setPrice}
+                discountedPrice={discountedPrice}
+                setDiscountedPrice={setDiscountedPrice}
+              />
+                           {" "}
+              <div className="mt-8 flex justify-end gap-4">
+                               {" "}
+                <button
+                  onClick={() => setActiveTab(0)}
+                  className="px-8 py-3 bg-gray-300 rounded-xl hover:bg-gray-400 font-semibold shadow transition duration-150"
+                >
+                                    ← Previous                {" "}
+                </button>
+                               {" "}
+                <button
+                  onClick={handleSaveAndPublish}
+                  className="px-8 py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 shadow-lg transition duration-150 transform hover:scale-[1.02] disabled:opacity-50"
+                  disabled={
+                    !title || !description || !coverFile || files.length === 0
+                  }
+                >
+                                    Publish Book! 🚀                {" "}
+                </button>
+                             {" "}
+              </div>
+                         {" "}
+            </>
           )}
-
-          {activeTab === "advanced" && (
-            <div className="p-6 text-gray-500">
-              Advanced Settings Content Here...
-              <p className="mt-3 text-sm text-gray-400">
-                (Placeholder - add advanced options)
-              </p>
+                   {" "}
+          {activeTab === 2 && (
+            <div className="p-10 text-xl text-gray-500 text-center bg-gray-50 rounded-xl my-4 border">
+              Advanced Settings are Coming Soon!
             </div>
           )}
-
-          {/* Actions */}
-          <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-4">
-            <button
-              onClick={() => window.history.back()}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSaveAndPublish}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-lg"
-            >
-              Save and Publish
-            </button>
-          </div>
+                 {" "}
         </div>
+             {" "}
       </div>
+         {" "}
     </div>
   );
 };

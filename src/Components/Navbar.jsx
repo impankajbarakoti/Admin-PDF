@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // Only Login & Signup here
 const authLinks = [
   { name: "Login", href: "/admin/login" },
-  { name: "Sign Up", href: "/admin/signup" },
+  
 ];
 
 const Navbar = () => {

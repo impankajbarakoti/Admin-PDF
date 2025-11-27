@@ -7,6 +7,7 @@ import HomeMain from './Components/HomeMain'
 // import AdminLogin from './Pages/AdminLogin'
 import AdminSignup from './Pages/AdminSignup'
 import Dashboard from './Pages/Dashboard.jsx'
+import PostBooks from './Pages/PostBooks.jsx'
 // import PostBooks from './Pages/PostBooks.jsx'
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<HomeMain />} />
         <Route path="/admin/login" element={<Dashboard />} />
         <Route path="/admin/signup" element={<AdminSignup />} />
+        <Route path="/postbook" element={<PostBooks/>} />
         {/* <Route path="/PostBook" element={<PostBooks/>} />  */}
       </Routes>
     </div>
