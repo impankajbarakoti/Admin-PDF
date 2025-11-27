@@ -461,6 +461,8 @@ import {
   HelpCircle,
 } from "lucide-react";
 
+const APIURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 // ------------------- Tab Component (Improved Styling) -------------------
 const Tab = ({ label, Icon, isActive, onClick }) => (
   <button
@@ -581,10 +583,10 @@ const PageDetailsSection = ({
                 e.stopPropagation();
                 onRemoveCover();
               }}
-              className="absolute top-3 right-3 p-2 rounded-full bg-red-500 shadow-lg text-white hover:bg-red-600 transition duration-150 z-10"
+              className="absolute top-3 right-3 p-2 sm:p-3 md:p-4 rounded-full bg-red-500 shadow-lg text-white hover:bg-red-600 transition duration-150 z-10"
               title="Remove Cover Image"
             >
-                            <Trash2 className="w-4 h-4" />           {" "}
+              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
             </button>
                      {" "}
           </>
@@ -896,7 +898,7 @@ const PostBooks = () => {
         })
       ); // 3️⃣ Save book data to backend (Using absolute URL as discussed)
 
-      await axios.post("http://localhost:5000/api/books", {
+      await axios.post(`${APIURL}/api/books`, {
         title,
         description,
         coverUrl,

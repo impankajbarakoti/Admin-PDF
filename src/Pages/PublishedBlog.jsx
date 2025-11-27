@@ -803,6 +803,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const APIURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 // ------------------- ViewBookModal Component (Enhanced UI) -------------------
 const ViewBookModal = ({ book, onClose }) => {
   if (!book) return null;
@@ -922,7 +923,7 @@ const PublishedBlogs = () => {
 
   const fetchBooks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/books/published");
+      const res = await axios.get(`${APIURL}/api/books/published`);
       setBooks(res.data);
       setLoading(false);
     } catch (err) {
@@ -935,7 +936,7 @@ const PublishedBlogs = () => {
     if (!window.confirm("Are you sure you want to delete this book?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      await axios.delete(`${APIURL}/api/books/${id}`);
       setBooks((prev) => prev.filter((b) => b._id !== id));
       toast.success("Book deleted successfully");
     } catch (err) {
