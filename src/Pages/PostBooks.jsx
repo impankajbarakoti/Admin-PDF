@@ -868,8 +868,11 @@ const PostBooks = () => {
       type === "image"
         ? `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
         : `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+    
+    console.log("endpoint : ", endpoint)
 
     const res = await axios.post(endpoint, formData);
+    console.log("res  ",type, " : ", res);
     return res.data.secure_url;
   }; // ------------------- Save & Next -------------------
 
@@ -888,15 +891,17 @@ const PostBooks = () => {
 
     try {
       // 1️⃣ Upload cover
-      const coverUrl = await uploadToCloudinary(coverFile, "image"); // 2️⃣ Upload book files
-
+      const coverUrl = await uploadToCloudinary(coverFile, "image");
+      console.log("coverUrl : ", coverUrl);
       const uploadedFiles = await Promise.all(
         files.map(async (f) => {
           if (f.isLink) return { name: f.name, url: f.url };
           const url = await uploadToCloudinary(f.file, "file");
+          console.log("FILE URL : ", url);
           return { name: f.file.name, url };
         })
-      ); // 3️⃣ Save book data to backend (Using absolute URL as discussed)
+      );
+      console.log("uploadedFiles : ", uploadedFiles)
 
       await axios.post(`${APIURL}/api/books`, {
         title,
