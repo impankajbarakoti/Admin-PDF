@@ -921,22 +921,28 @@ const PublishedBlogs = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const fetchBooks = async () => {
-    try {
-      const res = await axios.get(`${APIURL}/api/books/published`);
-      setBooks(res.data);
-      setLoading(false);
-    } catch (err) {
-      toast.error("Failed to load books");
-      setLoading(false);
-    }
-  };
+const fetchBooks = async () => {
+  try {
+  // console.log("Fetching books from:", `http://localhost:5000/api/books/published`);
+   const res = await axios.get(`${APIURL}/api/books/published`);
+    console.log("Books data:", res.data);
+    setBooks(res.data);
+    setLoading(false);
+    
+  } catch (err) {
+    console.error("Error fetching books:", err);
+    toast.error("Failed to load books");
+    setLoading(false);
+  }
+};
+
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this book?")) return;
 
     try {
       await axios.delete(`${APIURL}/api/books/${id}`);
+
       setBooks((prev) => prev.filter((b) => b._id !== id));
       toast.success("Book deleted successfully");
     } catch (err) {

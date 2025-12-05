@@ -1074,7 +1074,7 @@ const Dashboard = () => {
   const fetchPublishedBooks = async () => {
     setLoadingStats(true); 
     try {
-      const res = await axios.get(`${APIURL}/api/books/published`);
+       const res = await axios.get(`${APIURL}/api/books/published`);
       setPublishedBooks(res.data);
     } catch (err) {
       console.error("Error fetching published books count:", err);
